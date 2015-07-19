@@ -1,0 +1,4 @@
+[root]
+name = "Lang_detector_rust"
+version = "0.1.0"
+
