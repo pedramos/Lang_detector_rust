@@ -7,7 +7,7 @@ fn read_file(data: &std){
     let mut f = try!(File::open("foo.txt"));
     let mut s = String::new();
     try!(f.read_to_string(&mut s));
-    assert_eq!(s, "Hello, world!");
+
 
 }
 
