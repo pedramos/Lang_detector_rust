@@ -1,4 +1,4 @@
 [package]
-name = "Lang_detector_rust"
+name = "lang_detector_rust"
 version = "0.1.0"
 authors = ["rami"]
