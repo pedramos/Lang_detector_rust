@@ -6,27 +6,30 @@ use std::collections::HashMap;
 
 fn read_file(data: &str){
 
-    println!("Reading file {}","/home/rami/cool_stuff/Lang_detector_rust/src/test.txt");
+    println!("Reading file {}",data);
 
     let  file = File::open(data);
-
+    assert!(file.is_ok(), "Nao abriu o ficheiro");
     let buf = BufReader::new(file.unwrap());
-    //let mut hash = HashMap::new();
+
+let mut hash = HashMap::new();
 
     let mut split_1 = String::new();
     let mut split_2 = String::new();
     for line in buf.lines() {
-        let mut splited = line.unwrap().split(" ");
-        //println!("{}", line.unwrap().split(" ").nth(0).unwrap());
-        println!("{}", splited.nth(1).unwrap());
-        //split_1.push_str(line.unwrap().split(" ").nth(0).unwrap());
-        //split_2.push_str(line.unwrap().split(" ").nth(1).unwrap());
+        assert!(line.is_ok(), "falou a ler linha");
+        let linha = line.unwrap();
+        //println!("linha: {}",linha);
+        let splited = linha.split_whitespace().collect::<Vec<_>>();
+        //println!("tri from vec: {}",splited[0]);
+        //println!("value from vec: {}",splited[1]);
+        split_1.push_str(splited[0]);
+        split_2.push_str(splited[1]);
         //println!("{}",split_1);
         //println!("{}",split_2);
-        //hash.insert(split_1,split_2.parse::<u32>().unwrap());
-        //split_1.clear();
-        //split_2.clear();
-
+        hash.insert(split_1.to_string(),split_2.parse::<u32>().unwrap().to_string());
+        split_1.clear();
+        split_2.clear();
 
     }
 }
@@ -37,5 +40,5 @@ fn read_file(data: &str){
 
 
 fn main() {
-    read_file("/home/rami/cool_stuff/Lang_detector_rust/src/test.txt")
+    read_file("/home/rami/cool_stuff/lang_detector_rust/src/test.txt")
 }
