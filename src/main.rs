@@ -36,19 +36,27 @@ fn read_file(data: &str) -> HashMap<String,u32> {
     hash
 }
 //Function to separete the sentence in groups of 3 letters
-fn create_trip (&str input) -> <Vec<String>> {
+//FALTA TESTAR
+fn create_trip (input: &str) -> Vec<String> {
 
-let X = input.len();
-if (X<3){
-    println!("Please insert a bigger sentence");
-    let mut result = Vec::with_capacity(0);
-    return result;
-}
-let capacity = X - 2;
-let mut result = Vec::with_capacity(capacity);
+    let input_vec  = input.chars().collect::<Vec<char>>().clone();
+    let x = input.len();
+    if x<3 {
+        println!("Please insert a bigger sentence");
+        let result = Vec::with_capacity(0);
+        return result;
+    }
+    let capacity = x - 2;
+    let mut result = Vec::with_capacity(capacity);
 
-//IMCOMPLETE: ja está criado vector com o tamanho certo, falta separar as coisas
+    for i in (0 .. capacity){
+        result[i]=String::new();
+        result[i].push(input_vec[i]);
+        result[i].push(input_vec[i+1]);
+        result[i].push(input_vec[i+2]);
 
+    }
+    result
 }
 
 
