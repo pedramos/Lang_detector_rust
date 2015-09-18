@@ -2,6 +2,7 @@ use std::io::BufReader;
 use std::fs::File;
 use std::io::BufRead;
 use std::collections::HashMap;
+use std::io;
 
 
 
@@ -24,10 +25,19 @@ fn read_file(data: &str) -> HashMap<String,u32> {
         let splited = linha.split_whitespace().collect::<Vec<_>>();
         //println!("tri from vec: {}",splited[0]);
         //println!("value from vec: {}",splited[1]);
-        split_1.push_str(splited[0]);
-        split_2.push_str(splited[1]);
-        //println!("{}",split_1);
-        //println!("{}",split_2);
+        if splited.len() < 3 {
+            split_1.push_str(splited[0]);
+            split_2.push_str(splited[1]);
+        }
+        else {
+            split_1.push_str(splited[0]);
+            split_1.push(' ');
+            split_1.push_str(splited[1]);
+            split_2.push_str(splited[2]);
+
+        }
+        //println!("{}", split_1);
+        //println!("{}", split_2);
         hash.insert(split_1.to_string(),split_2.parse::<u32>().unwrap());
         split_1.clear();
         split_2.clear();
@@ -63,5 +73,12 @@ fn create_trip (input: &str) -> Vec<String> {
 
 
 fn main() {
-    let exemplo= read_file("/home/rami/cool_stuff/lang_detector_rust/src/test.txt");
+    let mut program_input =String::new();
+    let pt= read_file("/home/rami/cool_stuff/Lang_detector_rust/src/pt_trigram_count_pruned_100000.tsv");
+    loop {
+        print!("Insert here the phrase:\n>>");
+        io::stdin().read_line(&mut program_input);
+        
+
+    }
 }
