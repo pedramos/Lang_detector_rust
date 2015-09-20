@@ -6,7 +6,7 @@ use std::io;
 
 
 
-fn read_file(data: &str) -> HashMap<String,u32> {
+fn read_file(data: &str) -> HashMap<String,f32> {
 
     println!("Reading file {}",data);
 
@@ -17,8 +17,9 @@ fn read_file(data: &str) -> HashMap<String,u32> {
     let mut hash = HashMap::new();
     let mut split_1 = String::new();
     let mut split_2 = String::new();
-
+    let mut total=0.0;
     for line in buf.lines() {
+        total=total+1.0;
         assert!(line.is_ok(), "falou a ler linha");
         let linha = line.unwrap();
         let mut i = 0;
@@ -56,11 +57,16 @@ fn read_file(data: &str) -> HashMap<String,u32> {
 
         //println!("{}", split_1);
         //println!("{}", split_2);
-        hash.insert(split_1.to_string(),split_2.parse::<u32>().unwrap());
+        hash.insert(split_1.to_string(),split_2.parse::<f32>().unwrap());
         split_1.clear();
         split_2.clear();
 
     }
+    println!("{}",hash["lol"]);
+    for (trip,values) in hash.iter_mut(){
+        *values=*values/total;
+    }
+    println!("{}",hash["lol"]);
     hash
 }
 //Function to separete the sentence in groups of 3 letters
@@ -79,7 +85,7 @@ fn create_trip (input: &str) -> Vec<String> {
     let mut result = Vec::with_capacity(capacity);
 
     for i in (0 .. capacity){
-        result[i]=String::new();
+        result.push(String::new());
         result[i].push(input_vec[i]);
         result[i].push(input_vec[i+1]);
         result[i].push(input_vec[i+2]);
@@ -88,15 +94,39 @@ fn create_trip (input: &str) -> Vec<String> {
     result
 }
 
+//funcao que vai retornar o valor final
+fn calc_stat(input: &Vec<String>, hash: &HashMap<String,f32>) -> f32 {
 
+    let mut total=1.0;
+
+    for i in input {
+        if hash.contains_key(i) {
+            total=hash[i]*total;
+        }
+    }
+total
+}
 
 
 fn main() {
     let mut program_input =String::new();
     let pt= read_file("/home/rami/cool_stuff/Lang_detector_rust/src/pt_trigram_count_pruned_100000.tsv");
+    let fr= read_file("/home/rami/cool_stuff/Lang_detector_rust/src/fr_trigram_count_pruned_100000.tsv");
+    let es= read_file("/home/rami/cool_stuff/Lang_detector_rust/src/es_trigram_count_pruned_100000.tsv");
+    let mut pt_total=0.0;
+    let mut es_total=0.0;
+    let mut fr_total=0.0;
     loop {
-        print!("Insert here the phrase:\n>>");
+        println!("Insert here the phrase:");
+
         io::stdin().read_line(&mut program_input);
+        let data=create_trip(&program_input);
+        pt_total=calc_stat(&data,&pt);
+        fr_total=calc_stat(&data,&fr);
+        es_total=calc_stat(&data,&es);
+
+
+
 
 
     }
