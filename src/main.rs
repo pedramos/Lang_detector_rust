@@ -21,10 +21,26 @@ fn read_file(data: &str) -> HashMap<String,u32> {
     for line in buf.lines() {
         assert!(line.is_ok(), "falou a ler linha");
         let linha = line.unwrap();
+        let mut i = 0;
+        //println!("{}", linha.chars().collect::<Vec<char>>().len());
+        for letra in linha.chars() {
+            match i {
+                0 ... 2 => split_1.push(letra),
+                3 => {},
+                _ => split_2.push(letra),
+            }
+            //println!("{} {}",i, letra);
+            i+=1;
+        }
+
         //println!("linha: {}",linha);
-        let splited = linha.split_whitespace().collect::<Vec<_>>();
+
         //println!("tri from vec: {}",splited[0]);
         //println!("value from vec: {}",splited[1]);
+
+        /* REMOVIDO POR HAVER MANEIRA MAIS FACIL DE FAZER ISTO
+        let linha = line.unwrap();
+        let splited = linha.split_whitespace().collect::<Vec<_>>();
         if splited.len() < 3 {
             split_1.push_str(splited[0]);
             split_2.push_str(splited[1]);
@@ -36,6 +52,8 @@ fn read_file(data: &str) -> HashMap<String,u32> {
             split_2.push_str(splited[2]);
 
         }
+        */
+
         //println!("{}", split_1);
         //println!("{}", split_2);
         hash.insert(split_1.to_string(),split_2.parse::<u32>().unwrap());
@@ -56,6 +74,7 @@ fn create_trip (input: &str) -> Vec<String> {
         let result = Vec::with_capacity(0);
         return result;
     }
+
     let capacity = x - 2;
     let mut result = Vec::with_capacity(capacity);
 
@@ -78,7 +97,7 @@ fn main() {
     loop {
         print!("Insert here the phrase:\n>>");
         io::stdin().read_line(&mut program_input);
-        
+
 
     }
 }
