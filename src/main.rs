@@ -6,7 +6,7 @@ use std::io;
 
 
 
-fn read_file(data: &str) -> HashMap<String,f32> {
+fn read_file(data: &str) -> HashMap<String,f64> {
 
     println!("Reading file {}",data);
 
@@ -19,8 +19,8 @@ fn read_file(data: &str) -> HashMap<String,f32> {
     let mut split_2 = String::new();
     let mut total=0.0;
     for line in buf.lines() {
-        total=total+1.0;
-        assert!(line.is_ok(), "falou a ler linha");
+
+        assert!(line.is_ok(), "falhou a ler linha");
         let linha = line.unwrap();
         let mut i = 0;
         //println!("{}", linha.chars().collect::<Vec<char>>().len());
@@ -57,16 +57,26 @@ fn read_file(data: &str) -> HashMap<String,f32> {
 
         //println!("{}", split_1);
         //println!("{}", split_2);
-        hash.insert(split_1.to_string(),split_2.parse::<f32>().unwrap());
+        total=total+split_2.parse::<f64>().unwrap();
+        hash.insert(split_1.to_string(),split_2.parse::<f64>().unwrap());
         split_1.clear();
         split_2.clear();
 
     }
-    println!("{}",hash["lol"]);
+    //println!("{}",hash["lol"]);
     for (trip,values) in hash.iter_mut(){
         *values=*values/total;
+        /*
+        if *values>1.0{
+            println!("{}",*values);
+        }
+        println!("{}",*values);
+        */
     }
-    println!("{}",hash["lol"]);
+    //for (trip,values) in &hash {
+    //    println!("{}",values)
+    //}
+
     hash
 }
 //Function to separete the sentence in groups of 3 letters
@@ -95,13 +105,14 @@ fn create_trip (input: &str) -> Vec<String> {
 }
 
 //funcao que vai retornar o valor final
-fn calc_stat(input: &Vec<String>, hash: &HashMap<String,f32>) -> f32 {
+fn calc_stat(input: &Vec<String>, hash: &HashMap<String,f64>) -> f64 {
 
     let mut total=1.0;
 
     for i in input {
         if hash.contains_key(i) {
             total=hash[i]*total;
+            //println!("total:{}",total);
         }
     }
 total
@@ -124,9 +135,20 @@ fn main() {
         pt_total=calc_stat(&data,&pt);
         fr_total=calc_stat(&data,&fr);
         es_total=calc_stat(&data,&es);
-
-
-
+        /*
+        println!("pt:{}",pt_total);
+        println!("es:{}",es_total);
+        println!("fr:{}",fr_total);
+        */
+        if pt_total>fr_total && pt_total > es_total {
+            println!("Portugues");
+        }
+        else if fr_total>pt_total && fr_total > es_total {
+            println!("Frances");
+        }
+        else if es_total > fr_total && es_total>pt_total {
+            println!("Espanhol");
+        }
 
 
     }
