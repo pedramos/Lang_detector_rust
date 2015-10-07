@@ -5,7 +5,19 @@ use std::collections::HashMap;
 use std::io;
 
 
-
+/*###############################################################################
+  #                     read_file                                               #
+  #                                                                             #
+  # Function input:                                                             #
+  # data -> String: path to the file being read                                 #
+  #                                                                             #
+  # Funcion output:                                                             #
+  # hash -> HashMap<String,f64> : hashmap with the collected info               #
+  #         ['triplete','counter']                                              #
+  #                                                                             #
+  # What the funcion does:                                                      #
+  # Reads the file and stores the data into an hashmap                          #
+  ###############################################################################*/
 fn read_file(data: &str) -> HashMap<String,f64> {
 
     println!("Reading file {}",data);
@@ -30,61 +42,39 @@ fn read_file(data: &str) -> HashMap<String,f64> {
                 3 => {},
                 _ => split_2.push(letra),
             }
-            //println!("{} {}",i, letra);
+
             i+=1;
         }
-
-        //println!("linha: {}",linha);
-
-        //println!("tri from vec: {}",splited[0]);
-        //println!("value from vec: {}",splited[1]);
-
-        /* REMOVIDO POR HAVER MANEIRA MAIS FACIL DE FAZER ISTO
-        let linha = line.unwrap();
-        let splited = linha.split_whitespace().collect::<Vec<_>>();
-        if splited.len() < 3 {
-            split_1.push_str(splited[0]);
-            split_2.push_str(splited[1]);
-        }
-        else {
-            split_1.push_str(splited[0]);
-            split_1.push(' ');
-            split_1.push_str(splited[1]);
-            split_2.push_str(splited[2]);
-
-        }
-        */
-
-        //println!("{}", split_1);
-        //println!("{}", split_2);
         total=total+split_2.parse::<f64>().unwrap();
         hash.insert(split_1.to_string(),split_2.parse::<f64>().unwrap());
         split_1.clear();
         split_2.clear();
 
     }
-    //println!("{}",hash["lol"]);
-    for (trip,values) in hash.iter_mut(){
-        *values=*values/total;
-        /*
-        if *values>1.0{
-            println!("{}",*values);
-        }
-        println!("{}",*values);
-        */
-    }
-    //for (trip,values) in &hash {
-    //    println!("{}",values)
-    //}
 
+    for (__,values) in hash.iter_mut(){
+        *values=*values/total;
+
+    }
     hash
 }
-//Function to separete the sentence in groups of 3 letters
-//FALTA TESTAR
+
+/*###############################################################################
+  #                     create_trip                                             #
+  #                                                                             #
+  # Function input:                                                             #
+  # input -> String: string to be divided into triplets                         #
+  #                                                                             #
+  # Funcion output:                                                             #
+  # result -> Vec<String> :Vec containing all triplets (triplets are strings)   #
+  #                                                                             #
+  # What the funcion does:                                                      #
+  # Separetes the inputed string into triplets                                  #
+  ###############################################################################*/
 fn create_trip (input: &str) -> Vec<String> {
 
     let input_vec  = input.chars().collect::<Vec<char>>().clone();
-    let x = input.len();
+    let x = input_vec.len();
     if x<3 {
         println!("Please insert a bigger sentence");
         let result = Vec::with_capacity(0);
@@ -99,12 +89,26 @@ fn create_trip (input: &str) -> Vec<String> {
         result[i].push(input_vec[i]);
         result[i].push(input_vec[i+1]);
         result[i].push(input_vec[i+2]);
+        println!("{}",result[i]);
 
     }
     result
 }
 
-//funcao que vai retornar o valor final
+/*###############################################################################
+  #                     calc_stat                                               #
+  #                                                                             #
+  # Function input:                                                             #
+  # input -> &Vec<String> : reference of the vec containing the triplets        #
+  # hash ->  &HashMap<String,f64>: Reference to the hashmap containing the      #
+  #          language date                                                      #
+  # Funcion output:                                                             #
+  # total -> f64 : result of the processing of the triplets                     #
+  #                                                                             #
+  # What the funcion does:                                                      #
+  # For the language with the data in the hash map calculates the probability   #
+  # of being the given language for the inputed tripletes                       #
+  ###############################################################################*/
 fn calc_stat(input: &Vec<String>, hash: &HashMap<String,f64>) -> f64 {
 
     let mut total=1.0;
@@ -132,24 +136,22 @@ fn main() {
 
         io::stdin().read_line(&mut program_input);
         let data=create_trip(&program_input);
-        pt_total=calc_stat(&data,&pt);
-        fr_total=calc_stat(&data,&fr);
-        es_total=calc_stat(&data,&es);
-        /*
-        println!("pt:{}",pt_total);
-        println!("es:{}",es_total);
-        println!("fr:{}",fr_total);
-        */
-        if pt_total>fr_total && pt_total > es_total {
-            println!("Portugues");
-        }
-        else if fr_total>pt_total && fr_total > es_total {
-            println!("Frances");
-        }
-        else if es_total > fr_total && es_total>pt_total {
-            println!("Espanhol");
-        }
 
+        if data.len()>0 {
+            pt_total=calc_stat(&data,&pt);
+            fr_total=calc_stat(&data,&fr);
+            es_total=calc_stat(&data,&es);
+
+            if pt_total>fr_total && pt_total > es_total {
+                println!("Portugues");
+            }
+            else if fr_total>pt_total && fr_total > es_total {
+                println!("Frances");
+            }
+            else if es_total > fr_total && es_total>pt_total {
+                println!("Espanhol");
+            }
+        }
 
     }
 }
